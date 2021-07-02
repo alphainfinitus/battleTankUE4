@@ -26,6 +26,9 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed) {
 		startLocation,
 		hitLocation,
 		launchSpeed,
+		false,
+		0,
+		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
 
@@ -37,6 +40,9 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed) {
 
 		UE_LOG(LogTemp, Warning, TEXT("Aiming at: %s"), *(aimDirection.ToString()));
 	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT(" No bHaveAimSolution found"));
+	}
 
 	return;
 }
@@ -47,7 +53,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection) {
 	auto aimAtRotation = aimDirection.Rotation();
 	auto deltaRotation = aimAtRotation - barrelRotation;
 
-	barrel->Elevate(5); //TODO add precise value
+	barrel->Elevate(deltaRotation.Pitch);
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToSet) {
