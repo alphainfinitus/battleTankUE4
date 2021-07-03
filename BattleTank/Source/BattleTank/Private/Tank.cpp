@@ -34,16 +34,17 @@ void ATank::AimAt(FVector hitLocation) {
 }
 
 void ATank::Fire() {
-	UE_LOG(LogTemp, Warning, TEXT("Firing"));
 	if (!barrel) { return; }
 
 	//spawn a projectile at barrel's socket location
 
-	GetWorld()->SpawnActor<AProjectile>(
+	auto projectile = GetWorld()->SpawnActor<AProjectile>(
 		projectileBlueprint,
 		barrel->GetSocketLocation(FName("Projectile")),
 		barrel->GetSocketRotation(FName("Projectile"))
 		);
+
+	projectile->launchProjectile(launchSpeed);
 }
 
 void ATank::SetBarrelReference(UTankBarrel* barrelToSet) {
