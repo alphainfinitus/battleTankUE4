@@ -20,11 +20,4 @@ public:
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-private:
-	ATank* GetAIControlledTank() const;
-
-	ATank* GetPlayerTank() const;
-
-	void AimTowardsPlayerTank() const;
 };
