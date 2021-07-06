@@ -9,17 +9,6 @@ ATank* ATankPlayerController::GetControlledTank() const {
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
-
-	auto controlledTank = GetControlledTank();
-
-	if (!controlledTank) {
-		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController does not posses a tank"));
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController posseses: %s"), *(controlledTank->GetName()));
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("TankPlayerController BeginPlay called"));
 }
 
 //Tick
