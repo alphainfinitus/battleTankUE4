@@ -4,9 +4,6 @@
 #include "TankTrack.h"
 
 void UTankTrack::setThrottle(float throttle) {
-	UE_LOG(LogTemp, Warning, TEXT("Setting throttle"));
-
-	//TODO clamp throttle values
 
 	auto forceApplied = GetForwardVector() * throttle * maxDrivingForce;
 
