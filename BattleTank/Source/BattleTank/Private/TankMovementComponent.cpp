@@ -4,7 +4,7 @@
 #include "TankMovementComponent.h"
 
 void UTankMovementComponent::Initialise(UTankTrack* leftTrackToSet, UTankTrack* rightTrackToSet) {
-	if (!leftTrackToSet || !rightTrackToSet) { return; }
+	if (!ensure(leftTrackToSet && rightTrackToSet)) { return; }
 
 	leftTrack = leftTrackToSet;
 	rightTrack = rightTrackToSet;
@@ -19,8 +19,6 @@ void UTankMovementComponent::IntendMoveForward(float throwValue) {
 
 //negative values make it turn left
 void UTankMovementComponent::IntendTurnRight(float throwValue) {
-	//TODO clamp throttle values
-
 	leftTrack->setThrottle(throwValue);
 	rightTrack->setThrottle(-throwValue);
 }

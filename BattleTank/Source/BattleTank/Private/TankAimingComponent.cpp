@@ -2,6 +2,7 @@
 
 
 #include "TankAimingComponent.h"
+#include "Projectile.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
@@ -16,8 +17,16 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed) {
-	if (!barrel) { return; }
+void UTankAimingComponent::Initialise(UTankBarrel* barrelToSet, UTankTurret* turretToSet) {
+	if (!ensure(barrelToSet && turretToSet)) { return; }
+
+	barrel = barrelToSet;
+	turret = turretToSet;
+}
+
+void UTankAimingComponent::AimAt(FVector hitLocation) {
+	if (!ensure(barrel)) { return; }
+
 	FVector launchVelocityOUT;
 	FVector startLocation = barrel->GetSocketLocation(FName("Projectile"));
 
@@ -44,6 +53,9 @@ void UTankAimingComponent::AimAt(FVector hitLocation, float launchSpeed) {
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection) {
+
+	if (!ensure(barrel) || !ensure(turret)) { return; }
+
 	// calc diff b/w current barrel rotation and aim direction
 	auto barrelRotation = barrel->GetForwardVector().Rotation();
 	auto aimAtRotation = aimDirection.Rotation();
@@ -53,13 +65,23 @@ void UTankAimingComponent::MoveBarrelTowards(FVector aimDirection) {
 	turret->Rotate(deltaRotation.Yaw);
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* barrelToSet) {
-	if (!barrelToSet) { return; }
-	barrel = barrelToSet;
-}
+void UTankAimingComponent::Fire() {
 
-void UTankAimingComponent::SetTurretReference(UTankTurret* turretToSet) {
-	if (!turretToSet) { return; }
-	turret = turretToSet;
-}
+	bool bIsReloaded = (FPlatformTime::Seconds() - lastFireTime) > reloadTimeInSeconds;
 
+	if (!ensure(barrel && projectileBlueprint)) { return; }
+
+
+	if (!bIsReloaded) { return; }
+	//spawn a projectile at barrel's socket location
+
+	auto projectile = GetWorld()->SpawnActor<AProjectile>(
+		projectileBlueprint,
+		barrel->GetSocketLocation(FName("Projectile")),
+		barrel->GetSocketRotation(FName("Projectile"))
+		);
+
+	projectile->launchProjectile(launchSpeed);
+
+	lastFireTime = FPlatformTime::Seconds();
+}
