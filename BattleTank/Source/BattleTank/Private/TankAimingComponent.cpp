@@ -23,6 +23,9 @@ void UTankAimingComponent::BeginPlay() {
 }
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
+
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
 	bool bIsReloading = (FPlatformTime::Seconds() - lastFireTime) < reloadTimeInSeconds;
 
 	if (bIsReloading) {
@@ -89,7 +92,15 @@ void UTankAimingComponent::MoveBarrelTowardsAimDirection() {
 	auto deltaRotation = aimAtRotation - barrelRotation;
 
 	barrel->Elevate(deltaRotation.Pitch);
-	turret->Rotate(deltaRotation.Yaw);
+
+	//to always yaw the shortest distance (angle)
+	if (deltaRotation.Yaw > 180) {
+		turret->Rotate(-deltaRotation.Yaw);
+	}
+	else {
+		turret->Rotate(deltaRotation.Yaw);
+
+	}
 }
 
 void UTankAimingComponent::Fire() {

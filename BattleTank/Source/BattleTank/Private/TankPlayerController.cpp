@@ -21,6 +21,9 @@ void ATankPlayerController::Tick(float DeltaTime) {
 }
 
 void ATankPlayerController::AimTowardsCrossHair() {
+
+	if (!GetPawn()) { return; } //when not possessing ; not using ensure because runtime function
+
 	auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(aimingComponent)) { return; }
 
@@ -48,10 +51,10 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& hitLocation) const {
 	//de-project the screen position of the crosshair to world direction
 	if (GetLookDirection(screenLocation, lookDirection)) {
 		//line trace along the lookDirection and see what we hit on the map (to a max range);
-		GetLookDirectionHitLocation(lookDirection, hitLocation);
+		return GetLookDirectionHitLocation(lookDirection, hitLocation);
 	}
 
-	return true;
+	return false;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector2D screenLocation, FVector& lookDirection) const {

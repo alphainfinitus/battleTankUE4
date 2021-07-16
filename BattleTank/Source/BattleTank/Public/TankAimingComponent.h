@@ -52,7 +52,7 @@ private:
 	void MoveBarrelTowardsAimDirection();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float launchSpeed = 5000; //TODO: Find sensible default
+	float launchSpeed = 25000; //TODO: Find sensible default
 
 	UTankBarrel* barrel = nullptr;
 	UTankTurret* turret = nullptr;
