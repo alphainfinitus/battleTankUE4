@@ -9,6 +9,7 @@
 //Enum for aiming state
 UENUM()
 enum class EFiringState : uint8 {
+	OutOfAmmo,
 	Reloading,
 	Aiming,
 	Ready
@@ -38,6 +39,9 @@ public:
 
 	EFiringState GetFiringState() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	int GetAmmoCount() const;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState firingState = EFiringState::Reloading;
@@ -66,4 +70,6 @@ private:
 
 	bool IsBarrelMoving();
 	FVector aimDirection;
+
+	int ammoCount = 11;
 };
