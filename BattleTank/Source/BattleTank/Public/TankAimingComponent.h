@@ -36,6 +36,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialise(UTankBarrel* barrelToSet, UTankTurret* turretToSet);
 
+	EFiringState GetFiringState() const;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringState firingState = EFiringState::Reloading;
@@ -52,7 +54,7 @@ private:
 	void MoveBarrelTowardsAimDirection();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float launchSpeed = 25000; //TODO: Find sensible default
+	float launchSpeed = 4000; //TODO: Find sensible default
 
 	UTankBarrel* barrel = nullptr;
 	UTankTurret* turret = nullptr;

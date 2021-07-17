@@ -6,7 +6,6 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
-
 UCLASS()
 class BATTLETANK_API ATankAIController : public AAIController
 {
@@ -18,6 +17,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
-	float acceptanceRadius = 3000; //how close the ai can get to player
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float acceptanceRadius = 8000; //how close the ai can get to player
+	
 };
