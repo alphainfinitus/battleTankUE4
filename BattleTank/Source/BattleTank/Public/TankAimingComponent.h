@@ -40,10 +40,10 @@ public:
 	EFiringState GetFiringState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	int GetAmmoCount() const;
+	int32 GetAmmoCount() const;
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "State")
+	UPROPERTY(BlueprintReadOnly, Category = "Firing")
 	EFiringState firingState = EFiringState::Reloading;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Firing")
@@ -57,19 +57,21 @@ private:
 
 	void MoveBarrelTowardsAimDirection();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float launchSpeed = 4000; //TODO: Find sensible default
-
 	UTankBarrel* barrel = nullptr;
 	UTankTurret* turret = nullptr;
+
+	bool IsBarrelMoving();
+
+	FVector aimDirection;
+
+	double lastFireTime = 0;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float reloadTimeInSeconds = 3;
 
-	double lastFireTime = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float launchSpeed = 4000; //TODO: Find sensible default
 
-	bool IsBarrelMoving();
-	FVector aimDirection;
-
-	int ammoCount = 11;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 ammoCount = 11;
 };
