@@ -24,6 +24,8 @@ AProjectile::AProjectile()
 	impactBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	impactBlast->bAutoActivate = false;
 
+	explosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+	explosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 }
 
@@ -42,4 +44,5 @@ void AProjectile::launchProjectile(float speed){
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) {
 	launchBlast->Deactivate();
 	impactBlast->Activate();
+	explosionForce->FireImpulse();
 }
