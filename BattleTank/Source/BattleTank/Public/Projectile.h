@@ -46,4 +46,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float destroyDelay = 10;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float projectileDamage = 10;
 };

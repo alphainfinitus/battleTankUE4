@@ -2,6 +2,7 @@
 
 #include "Particles/ParticleSystemComponent.h"
 #include "Projectile.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 
 // Sets default values
 AProjectile::AProjectile()
@@ -12,7 +13,7 @@ AProjectile::AProjectile()
 	collisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Collision Mesh"));
 	SetRootComponent(collisionMesh);
 	collisionMesh->SetNotifyRigidBodyCollision(true);
-	collisionMesh->SetVisibility(true); //TODO Revert to false in production
+	collisionMesh->SetVisibility(false); //TODO Revert to false in production
 
 	launchBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Launch Blast"));
 	launchBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -49,8 +50,17 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	SetRootComponent(impactBlast);
 	collisionMesh->DestroyComponent();
 
-	FTimerHandle timerHandle;
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		projectileDamage,
+		GetActorLocation(),
+		explosionForce->Radius,
+		UDamageType::StaticClass(),
+		TArray<AActor*>() //empty array damages all actors
 
+	);
+
+	FTimerHandle timerHandle; //OUT (no-use rn)
 	GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &AProjectile::OnTimerExpire, destroyDelay, false);
 }
 
