@@ -70,8 +70,8 @@ private:
 	float reloadTimeInSeconds = 3;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float launchSpeed = 4000; //TODO: Find sensible default
+	float launchSpeed = 8000; //TODO: Find sensible default
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int32 ammoCount = 11;
+	int32 ammoCount = 20;
 };

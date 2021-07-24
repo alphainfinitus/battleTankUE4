@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <BattleTank/Public/Tank.h>
 #include "TankAimingComponent.h"
 #include "TankPlayerController.h"
 
@@ -18,6 +19,23 @@ void ATankPlayerController::BeginPlay() {
 void ATankPlayerController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	AimTowardsCrossHair();
+}
+
+void ATankPlayerController::SetPawn(APawn* InPawn){
+	Super::SetPawn(InPawn);
+
+	if (InPawn) {
+		auto possessedTank = Cast<ATank>(InPawn);
+		if (!ensure(possessedTank)) { return; }
+
+		//Subscribe local method to tank's death event
+		possessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath() {
+	UE_LOG(LogTemp, Warning, TEXT("Player tank is tank no more"));
+	StartSpectatingOnly();
 }
 
 void ATankPlayerController::AimTowardsCrossHair() {
@@ -67,7 +85,7 @@ bool ATankPlayerController::GetLookDirectionHitLocation(FVector lookDirection, F
 	auto startLocation = PlayerCameraManager->GetCameraLocation();
 	auto endLocation = startLocation + (lookDirection * lineTraceRange);
 
-	if (GetWorld()->LineTraceSingleByChannel(hitResult, startLocation, endLocation, ECollisionChannel::ECC_Visibility)) {
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, startLocation, endLocation, ECollisionChannel::ECC_Camera)) {
 		//line trace succeeds
 		//set hit location
 		hitLocation = hitResult.Location;

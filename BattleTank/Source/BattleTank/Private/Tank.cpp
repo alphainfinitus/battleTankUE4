@@ -4,12 +4,22 @@
 #include "Projectile.h"
 #include "Tank.h"
 
+float ATank::GetHealthPercent() const
+{
+	return (float)currentHealth / (float)startingHealth;
+}
+
 // Sets default values
 ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
+
+void ATank::BeginPlay() {
+	Super::BeginPlay();
+	currentHealth = startingHealth;
+ }
 
 float ATank::TakeDamage(
 	float DamageAmount,
@@ -23,7 +33,7 @@ float ATank::TakeDamage(
 	currentHealth -= damageToApply;
 
 	if (currentHealth <= 0) {
-		UE_LOG(LogTemp, Warning, TEXT("Tank is tank no more"));
+		OnDeath.Broadcast();
 	}
 
 	return damageToApply;
