@@ -18,6 +18,8 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 void UTankAimingComponent::BeginPlay() {
+	Super::BeginPlay();
+
 	//so that first fire is after initial reload
 	lastFireTime = FPlatformTime::Seconds();
 }
