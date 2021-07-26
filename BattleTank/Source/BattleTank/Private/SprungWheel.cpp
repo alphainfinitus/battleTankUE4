@@ -9,6 +9,7 @@ ASprungWheel::ASprungWheel()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PostPhysics;
 
 	//actually mass axle physics constraint
 	massWheelPhysicsConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(FName("Mass Wheel Physics Constraint"));
@@ -29,6 +30,9 @@ void ASprungWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
+	wheel->SetNotifyRigidBodyCollision(true);
+	wheel->OnComponentHit.AddDynamic(this, &ASprungWheel::OnHit);
+
 	SetupConstraint();
 	
 }
@@ -47,9 +51,19 @@ void ASprungWheel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (GetWorld()->TickGroup == TG_PostPhysics) {
+		totalForceMagnitudeThisFrame = 0;
+	}
 }
 
 void ASprungWheel::AddDrivingForce(float forceMagnitude){
-	wheel->AddForce(axle->GetForwardVector() * forceMagnitude);
+	totalForceMagnitudeThisFrame += forceMagnitude;
 }
 
+void ASprungWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
+	ApplyForce();
+}
+
+void ASprungWheel::ApplyForce() {
+	wheel->AddForce(axle->GetForwardVector() * totalForceMagnitudeThisFrame);
+}
