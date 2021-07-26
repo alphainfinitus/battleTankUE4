@@ -8,6 +8,7 @@
 
 //forward declarations
 class UPhysicsConstraintComponent;
+class USphereComponent;
 
 UCLASS()
 class BATTLETANK_API ASprungWheel : public AActor
@@ -32,8 +33,14 @@ private:
 
 	//Components
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* wheel = nullptr;
+	USphereComponent* axle = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UPhysicsConstraintComponent* massWheelPhysicsConstraint = nullptr;
+	USphereComponent* wheel = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPhysicsConstraintComponent* axleWheelPhysicsConstraint = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UPhysicsConstraintComponent* massWheelPhysicsConstraint = nullptr; //also mass - axle constraint
 };
