@@ -16,15 +16,19 @@ public:
 	// Sets default values for this component's properties
 	USpawnPoint();
 
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	AActor* GetSpawnedActor() const;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Setup")
 	TSubclassOf<AActor> spawnClass;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
+	UPROPERTY()
+	AActor* spawnedActor;
+
 };
