@@ -2,6 +2,14 @@
 
 #include "TankTrack.h"
 #include "TankMovementComponent.h"
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "Sound/SoundCue.h"
+
+UTankMovementComponent::UTankMovementComponent() {
+
+	static ConstructorHelpers::FObjectFinder<USoundCue> tankMovingSound(TEXT("/Game/Audio/old_tank_moving_Cue.old_tank_moving_Cue"));
+	tankMovingSoundCue = tankMovingSound.Object;
+}
 
 void UTankMovementComponent::Initialise(UTankTrack* leftTrackToSet, UTankTrack* rightTrackToSet) {
 	if (!ensure(leftTrackToSet && rightTrackToSet)) { return; }
@@ -11,7 +19,16 @@ void UTankMovementComponent::Initialise(UTankTrack* leftTrackToSet, UTankTrack* 
 }
 
 void UTankMovementComponent::IntendMoveForward(float throwValue) {
-	//TODO clamp throttle values
+	/*
+	
+	UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(
+		this,
+		tankMovingSoundCue,
+		GetOwner()->GetActorLocation(),
+		FRotator::ZeroRotator, 1, 1, 0.0f, nullptr, nullptr, true
+	);
+
+	*/
 
 	leftTrack->setThrottle(throwValue);
 	rightTrack->setThrottle(throwValue);
@@ -33,6 +50,4 @@ void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool
 
 	auto rightThrow = FVector::CrossProduct(tankForwardDirection, aiForwardIntention).Z;
 	IntendTurnRight(rightThrow);
-
-	UE_LOG(LogTemp, Warning, TEXT("%s vectoring to %s"), *GetOwner()->GetName(), *MoveVelocity.ToString());
 }

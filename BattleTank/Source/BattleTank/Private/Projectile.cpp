@@ -3,6 +3,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "Projectile.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -28,6 +29,9 @@ AProjectile::AProjectile()
 	explosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
 	explosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
+	//Setup Explosion Sound Cue
+	static ConstructorHelpers::FObjectFinder<USoundCue> projectileExplosionSound(TEXT("/Game/Audio/projectile_explosion_short_Cue.projectile_explosion_short_Cue"));
+	projectileExplosionSoundCue = projectileExplosionSound.Object;
 }
 
 // Called when the game starts or when spawned
@@ -44,7 +48,16 @@ void AProjectile::launchProjectile(float speed){
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) {
 	launchBlast->Deactivate();
+
 	impactBlast->Activate();
+
+	UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(
+		this,
+		projectileExplosionSoundCue,
+		Hit.Location,
+		FRotator::ZeroRotator, 1, 1, 0.0f, nullptr, nullptr, true
+	);
+
 	explosionForce->FireImpulse();
 
 	SetRootComponent(impactBlast);

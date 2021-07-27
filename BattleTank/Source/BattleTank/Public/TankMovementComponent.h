@@ -7,6 +7,7 @@
 #include "TankMovementComponent.generated.h"
 
 class UTankTrack;
+class USoundCue;
 
 // For driving the tank tracks
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -24,6 +25,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialise(UTankTrack* leftTrackToSet, UTankTrack* rightTrackToSet);
 
+	// Sets default values for playing sound
+	UTankMovementComponent();
+
+protected:
+	UPROPERTY()
+	USoundCue* tankMovingSoundCue;
 
 private:
 	//call from path-finding logic by the ai controller

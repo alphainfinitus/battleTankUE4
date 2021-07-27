@@ -19,6 +19,7 @@ enum class EFiringState : uint8 {
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+class USoundCue;
 
 //Holds barrel properties and methods
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -49,6 +50,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Firing")
 	TSubclassOf<AProjectile> projectileBlueprint;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Sound")
+	USoundCue* tankFiringSoundCue;
+
 private:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
@@ -72,6 +76,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float launchSpeed = 8000; //TODO: Find sensible default
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	UPROPERTY(EditAnywhere, Category = "Firing")
 	int32 ammoCount = 20;
 };

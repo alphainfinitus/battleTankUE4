@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
+class USoundCue;
 
 UCLASS()
 class BATTLETANK_API AProjectile : public AActor
@@ -23,6 +24,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	USoundCue* projectileExplosionSoundCue;
 
 private:
 	UProjectileMovementComponent* projectileMovement = nullptr;
@@ -45,7 +49,7 @@ private:
 	void OnTimerExpire();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float destroyDelay = 10;
+	float destroyDelay = 20;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float projectileDamage = 10;

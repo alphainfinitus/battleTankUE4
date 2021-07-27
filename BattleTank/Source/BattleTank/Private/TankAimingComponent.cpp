@@ -6,6 +6,7 @@
 #include "TankBarrel.h"
 #include "TankTurret.h"
 #include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
+#include "Sound/SoundCue.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -15,6 +16,9 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+
+	static ConstructorHelpers::FObjectFinder<USoundCue> tankFiringSound(TEXT("/Game/Audio/tankFiring_Cue.tankFiring_Cue"));
+	tankFiringSoundCue = tankFiringSound.Object;
 }
 
 void UTankAimingComponent::BeginPlay() {
@@ -114,6 +118,13 @@ void UTankAimingComponent::Fire() {
 
 	if (!ensure(barrel && projectileBlueprint)) { return; }
 
+	UAudioComponent* AudioComponent = UGameplayStatics::SpawnSoundAtLocation(
+		this,
+		tankFiringSoundCue,
+		GetOwner()->GetActorLocation(),
+		FRotator::ZeroRotator, 1, 1, 0.0f, nullptr, nullptr, true
+	);
+
 	auto projectile = GetWorld()->SpawnActor<AProjectile>(
 		projectileBlueprint,
 		barrel->GetSocketLocation(FName("Projectile")),
@@ -126,7 +137,6 @@ void UTankAimingComponent::Fire() {
 
 	lastFireTime = FPlatformTime::Seconds();
 }
-
 
 EFiringState UTankAimingComponent::GetFiringState() const {
 	return firingState;

@@ -19,7 +19,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float acceptanceRadius = 6000; //how close the ai can get to player
+	float acceptanceRadius = 9000; //how close the ai can get to player
 	
 private:
 	virtual void SetPawn(APawn* InPawn) override;
