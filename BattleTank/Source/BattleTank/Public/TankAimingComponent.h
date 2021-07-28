@@ -77,5 +77,5 @@ private:
 	float launchSpeed = 8000; //TODO: Find sensible default
 
 	UPROPERTY(EditAnywhere, Category = "Firing")
-	int32 ammoCount = 20;
+	int32 ammoCount = 120;
 };
